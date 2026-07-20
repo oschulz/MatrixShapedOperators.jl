@@ -1,5 +1,9 @@
 # API
 
+```@meta
+CurrentModule = MatrixShapedOperators
+```
+
 ## Modules
 
 ```@index
@@ -19,6 +23,10 @@ Order = [:macro, :function]
 ```
 
 # Documentation
+
+```@docs
+Base.:(\)(op::MatrixShapedOperator, x::AbstractVecOrMat{<:Number})
+```
 
 ```@autodocs
 Modules = [MatrixShapedOperators]
