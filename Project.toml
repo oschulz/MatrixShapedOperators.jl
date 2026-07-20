@@ -1,0 +1,15 @@
+name = "MatrixShapedOperators"
+uuid = "bac048d7-ba5f-40bb-941d-86aed15d6a0e"
+version = "0.1.0"
+
+[workspace]
+projects = ["test", "docs"]
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[extensions]
+
+[compat]
+LinearAlgebra = "1"
+julia = "1.10"
