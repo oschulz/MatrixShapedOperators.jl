@@ -109,6 +109,7 @@ end
 
 # Canonical order is by module and name of the trait category, so that
 # equally-named third-party categories cannot collide:
+_canonical_key(C::Type) = (string(parentmodule(C)), String(nameof(C)))
 @generated function _traitset_canonical(decls...)
     kept = Type[]
     cats = Type[]
@@ -121,8 +122,6 @@ end
     sort!(kept; by = T -> _canonical_key(trait_category(T)))
     return :( ($(map(T -> :($T()), kept)...),) )
 end
-
-_canonical_key(C::Type) = (string(parentmodule(C)), String(nameof(C)))
 
 @generated _traits_instance(::Type{TRS}) where {TRS<:Tuple} =
     :( ($(map(T -> :($T()), TRS.parameters)...),) )
