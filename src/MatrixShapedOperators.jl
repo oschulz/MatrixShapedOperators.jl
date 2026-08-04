@@ -35,6 +35,7 @@ include("identity_operator.jl")
 include("zero_operator.jl")
 include("structured_operators.jl")
 include("test_operator.jl")
+include("precompile.jl")
 
 function __init__()
     Base.Experimental.register_error_hint(MethodError) do io, exc, _, _
