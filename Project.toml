@@ -1,6 +1,6 @@
 name = "MatrixShapedOperators"
 uuid = "bac048d7-ba5f-40bb-941d-86aed15d6a0e"
-version = "0.1.0"
+version = "0.1.1"
 
 [workspace]
 projects = ["test", "docs"]
@@ -36,8 +36,8 @@ ChainRulesCore = "1"
 Compat = "4.10"
 InverseFunctions = "0.1.17"
 LinearAlgebra = "1"
-PrecompileTools = "1.2"
 LinearMaps = "3"
+PrecompileTools = "1.2"
 SciMLOperators = "1.15"
 SparseArrays = "1"
 Statistics = "1"
