@@ -136,7 +136,8 @@ end
 # an invertible base with a structural solve and a nonsingular total;
 # D may be indefinite or singular. Each solve refactorizes, use
 # `LinearAlgebra.factorize` for repeated solves of positive-definite
-# operators:
+# operators. The reduced system solves via function-level `\` (not an
+# explicit lu) so that AD rules for `\` apply:
 function ldiv_impl(op::WoodburyOperator, x::AbstractVecOrMat{<:Number})
     Aop = asoperator(op.A)
     size(op.B, 2) == 0 && return ldiv_impl(Aop, x)
@@ -144,21 +145,22 @@ function ldiv_impl(op::WoodburyOperator, x::AbstractVecOrMat{<:Number})
     D = asmatrix(op.D)
     Ainv_x = ldiv_impl(Aop, x)
     Ainv_B = ldiv_impl(Aop, B)
-    S = lu(muladd(D, adjoint(B) * Ainv_B, I))
+    S = muladd(D, adjoint(B) * Ainv_B, I)
     return Ainv_x .- Ainv_B * (S \ (D * (adjoint(B) * Ainv_x)))
 end
 
 # det(A + B D B') = det(A) det(I + D B'A⁻¹B), the matching D-inverse-
 # free push-through form; requires a structural solve and logabsdet of
 # an invertible base. A singular total yields (-Inf, 0), like for
-# matrices:
+# matrices (function-level `logabsdet` factorizes with check = false
+# itself; it also keeps AD rules for `logabsdet` applicable):
 function LinearAlgebra.logabsdet(op::WoodburyOperator)
     Aop = asoperator(op.A)
     la_A = logabsdet(Aop)
     size(op.B, 2) == 0 && return la_A
     B = asmatrix(op.B)
     D = asmatrix(op.D)
-    la_S = logabsdet(lu(muladd(D, adjoint(B) * ldiv_impl(Aop, B), I); check = false))
+    la_S = logabsdet(muladd(D, adjoint(B) * ldiv_impl(Aop, B), I))
     return first(la_A) + first(la_S), last(la_A) * last(la_S)
 end
 
