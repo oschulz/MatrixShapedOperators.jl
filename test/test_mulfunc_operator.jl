@@ -111,6 +111,12 @@ MatrixShapedOperators.BatchedMulStyle(::_DiagMulTestFunc) = BatchedMul()
     end
 
     @timed_testset "equality and requested types" begin
+        # requested-type support is checkable, unknown types throw:
+        @test MatrixShapedOperators.check_mulfunc_operator_support(MulFuncOperator) === nothing
+        @test MatrixShapedOperators.check_mulfunc_operator_support(Matrix) === nothing
+        @test_throws ArgumentError MatrixShapedOperators.check_mulfunc_operator_support(Vector)
+        @test_throws ArgumentError MatrixShapedOperators.check_mulfunc_operator_support(Diagonal)
+
         f = x -> 2 .* x
         m1 = mulfunc_operator(Float64, (3, 3), f, f)
         # trait declarations do not participate in equality or hashing:

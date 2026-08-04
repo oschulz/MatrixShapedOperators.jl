@@ -35,10 +35,30 @@ The form with a leading operator type `OP` builds that operator type
 instead, including foreign types like `LinearMaps.LinearMap` (package
 extensions) and `Matrix`, which materializes. It lets packages that
 generate multiplication functions, e.g. autodiff packages, target a
-requested operator type without depending on its package.
+requested operator type without depending on its package. Support
+can be checked via
+[`MatrixShapedOperators.check_mulfunc_operator_support`](@ref).
 """
 function mulfunc_operator end
 export mulfunc_operator
+
+"""
+    MatrixShapedOperators.check_mulfunc_operator_support(::Type{OP})::Nothing
+
+Throws an `ArgumentError` if [`mulfunc_operator`](@ref) can't construct
+operators of type `OP` with the packages currently loaded, returns
+`nothing` otherwise.
+
+Specializations of `mulfunc_operator` for custom operator types should be
+accompanied by a specialization of `check_mulfunc_operator_support` that
+returns `nothing`.
+"""
+check_mulfunc_operator_support(::Type{OP}) where OP = throw(ArgumentError(
+    "mulfunc_operator can't construct operators of type $OP - unsupported type, or its package is not loaded"
+))
+@compat public check_mulfunc_operator_support
+
+check_mulfunc_operator_support(::Type{Matrix}) = nothing
 
 function mulfunc_operator(::Type{T}, sz::Dims{2}, ovp, vop, decls...) where {T<:Number}
     return MulFuncOperator{T}(ovp, vop, sz, decls...)
@@ -85,6 +105,8 @@ struct MulFuncOperator{T<:Number,TRS<:Tuple,F,G} <: MatrixShapedOperator{T}
     end
 end
 export MulFuncOperator
+
+check_mulfunc_operator_support(::Type{<:MulFuncOperator}) = nothing
 
 function MulFuncOperator{T}(ovp::F, vop::G, sz::Dims{2}, decls...) where {T<:Number,F,G}
     ts = traitset(decls...)

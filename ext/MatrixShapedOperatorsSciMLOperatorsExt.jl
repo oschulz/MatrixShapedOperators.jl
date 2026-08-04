@@ -35,6 +35,8 @@ function _function_operator(::Type{T}, sz::Dims{2}, ovp, vop, sym::Bool, herm::B
     )
 end
 
+MatrixShapedOperators.check_mulfunc_operator_support(::Type{<:SciMLOperators.AbstractSciMLOperator}) = nothing
+
 # The declarations are validated by the MulFuncOperator construction,
 # the conversion applies the value-refined is* flags:
 function MatrixShapedOperators.mulfunc_operator(

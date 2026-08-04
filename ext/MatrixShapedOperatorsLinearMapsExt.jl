@@ -10,6 +10,8 @@ using MatrixShapedOperators: MatrixShapedOperator, MulFuncOperator
 using LinearAlgebra
 
 
+MatrixShapedOperators.check_mulfunc_operator_support(::Type{<:Union{LinearMap,FunctionMap}}) = nothing
+
 # The declarations are validated by the MulFuncOperator construction,
 # the conversion applies the value-refined is* flags:
 function MatrixShapedOperators.mulfunc_operator(

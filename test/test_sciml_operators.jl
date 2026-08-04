@@ -10,6 +10,9 @@ using LinearAlgebra
 using MatrixShapedOperators: IsHermitian, IsPosDef
 
 @timed_testset "sciml_operators" begin
+    @test MatrixShapedOperators.check_mulfunc_operator_support(SciMLOperators.AbstractSciMLOperator) === nothing
+    @test MatrixShapedOperators.check_mulfunc_operator_support(SciMLOperators.FunctionOperator) === nothing
+
     A = randn(Float32, 4, 5)
     x_l = randn(Float32, 4)
     x_r = randn(Float32, 5)
