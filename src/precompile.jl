@@ -2,6 +2,9 @@
 
 import PrecompileTools
 
+# Woodbury operators are deliberately left out, precompilation increases
+# package load time a lot.
+
 PrecompileTools.@compile_workload begin
     for T in (Float64, Float32)
         A = T[1 2; 3 4]
@@ -39,25 +42,17 @@ PrecompileTools.@compile_workload begin
         g = rowgram_operator(A)
         g * x
         colgram_operator(A) * x
-        w = woodbury_operator(Diagonal(d), A, Symmetric(S))
-        w * x
 
         # structural solves, determinants and factors:
         pop \ x
         ltop \ x
-        w \ x
-        factorize(w) \ x
-        logabsdet(w)
         logabsdet(pop)
-        rowgram_factor(w)
         lower_cholesky(pop)
         lower_cholesky(rowgram_operator(LowerTriangular(S)))
         isposdef(g)
-        ishermitian(w)
 
         # materialization:
         Matrix(op)
-        Matrix(w)
         AbstractMatrix(g)
     end
 end
