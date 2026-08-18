@@ -74,6 +74,13 @@ function Base.size(op::MatrixShapedOperator, d::Integer)
     return d <= 2 ? size(op)[d] : 1
 end
 
+Base.axes(op::MatrixShapedOperator) = map(Base.OneTo, size(op))
+
+function Base.axes(op::MatrixShapedOperator, d::Integer)
+    d >= 1 || throw(ArgumentError("dimension out of range, got $d"))
+    return Base.OneTo(size(op, d))
+end
+
 
 """
     MatrixShapedOperators.explicit_mul_impl(a, b)
